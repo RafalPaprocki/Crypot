@@ -12,7 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api")
-@CrossOrigin("http://localhost:4200")
+@CrossOrigin("*")
 public class TestController {
     TestRepository testRepository;
 
