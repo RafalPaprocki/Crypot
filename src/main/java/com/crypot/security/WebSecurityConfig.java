@@ -1,5 +1,7 @@
 package com.crypot.security;
 
+import com.crypot.security.jwt.JwtAuthEntryPoint;
+import com.crypot.security.jwt.JwtAuthTokenFilter;
 import com.crypot.security.services.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;

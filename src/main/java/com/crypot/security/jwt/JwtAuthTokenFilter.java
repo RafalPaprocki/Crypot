@@ -1,4 +1,4 @@
-package com.crypot.security;
+package com.crypot.security.jwt;
 
 import java.io.IOException;
 

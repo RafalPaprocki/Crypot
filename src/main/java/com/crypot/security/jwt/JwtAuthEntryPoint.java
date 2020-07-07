@@ -1,4 +1,4 @@
-package com.crypot.security;
+package com.crypot.security.jwt;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

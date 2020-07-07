@@ -1,4 +1,4 @@
-package com.crypot.security;
+package com.crypot.security.jwt;
 
 import com.crypot.security.services.UserPrinciple;
 import io.jsonwebtoken.*;
