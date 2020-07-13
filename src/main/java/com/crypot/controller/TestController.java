@@ -28,6 +28,7 @@ public class TestController {
         List<Test> tests = new ArrayList<>();
         testRepository.findAll().forEach(tests::add);
         return new ResponseEntity<>(tests, HttpStatus.OK);
+
     }
     
 }

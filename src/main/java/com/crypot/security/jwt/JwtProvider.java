@@ -6,9 +6,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
+import java.util.*;
 
 @Component
 public class JwtProvider {
@@ -24,11 +25,11 @@ public class JwtProvider {
     public String generateJwtToken(Authentication authentication) {
 
         UserPrinciple userPrincipal = (UserPrinciple) authentication.getPrincipal();
-
         return Jwts.builder()
+                .setClaims(getAuthoritiesClaims(userPrincipal))
                 .setSubject((userPrincipal.getUsername()))
                 .setIssuedAt(new Date())
-                .setExpiration(new Date((new Date()).getTime() + jwtExpiration*1000))
+                .setExpiration(new Date(new Date().getTime() + jwtExpiration*1000))
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)
                 .compact();
     }
@@ -57,5 +58,16 @@ public class JwtProvider {
                 .setSigningKey(jwtSecret)
                 .parseClaimsJws(token)
                 .getBody().getSubject();
+    }
+
+    private Map<String, Object> getAuthoritiesClaims(UserPrinciple userPrinciple){
+        List<GrantedAuthority> authorities = (List<GrantedAuthority>)userPrinciple.getAuthorities();
+        List<String> roles = new ArrayList<>();
+        Map<String, Object> authoritiesClaims = new HashMap<>();
+        for(GrantedAuthority authority : authorities ) {
+           roles.add(authority.getAuthority());
+        }
+        authoritiesClaims.put("roles", roles);
+        return authoritiesClaims;
     }
 }
