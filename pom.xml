@@ -9,6 +9,7 @@
 
     <modules>
         <module>crypot-core</module>
+        <module>crypot-exchange</module>
     </modules>
 
 </project>
