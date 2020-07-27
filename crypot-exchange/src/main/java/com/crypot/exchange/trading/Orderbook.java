@@ -1,39 +1,29 @@
 package com.crypot.exchange.trading;
 
-import java.math.BigDecimal;
+import java.util.List;
 
 public class Orderbook {
-    String type;
-    BigDecimal presentCryptoAmount;
-    Integer sequentialNumber;
+    List<OrderbookEntry> asks;
+    List<OrderbookEntry> bids;
 
-    public Orderbook(String type, BigDecimal presentCryptoAmount, Integer sequentialNumber) {
-        this.type = type;
-        this.presentCryptoAmount = presentCryptoAmount;
-        this.sequentialNumber = sequentialNumber;
+    public Orderbook(List<OrderbookEntry> asks, List<OrderbookEntry> bids) {
+        this.asks = asks;
+        this.bids = bids;
     }
 
-    public String getType() {
-        return type;
+    public List<OrderbookEntry> getAsks() {
+        return asks;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setAsks(List<OrderbookEntry> asks) {
+        this.asks = asks;
     }
 
-    public BigDecimal getPresentCryptoAmount() {
-        return presentCryptoAmount;
+    public List<OrderbookEntry> getBids() {
+        return bids;
     }
 
-    public void setPresentCryptoAmount(BigDecimal presentCryptoAmount) {
-        this.presentCryptoAmount = presentCryptoAmount;
-    }
-
-    public Integer getSequentialNumber() {
-        return sequentialNumber;
-    }
-
-    public void setSequentialNumber(Integer sequentialNumber) {
-        this.sequentialNumber = sequentialNumber;
+    public void setBids(List<OrderbookEntry> bids) {
+        this.bids = bids;
     }
 }

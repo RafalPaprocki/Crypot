@@ -1,6 +1,6 @@
 package com.crypot.controller;
 
-import com.crypot.exchange.BitbayApiAdapter;
+import com.crypot.exchange.bitbay.BitbayApiAdapter;
 import com.crypot.model.Test;
 import com.crypot.repository.TestRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,8 +34,8 @@ public class TestController {
     }
 
     @GetMapping("/test2")
-    public ResponseEntity<BitbayApiAdapter.WalletResponse> test() throws Exception{
-        return this.bitbayApiAdapter.getAllWallets();
+    public String test() throws Exception{
+        return this.bitbayApiAdapter.getStringTest();
     }
 
     @PostMapping("/test3")

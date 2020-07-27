@@ -1,10 +1,12 @@
-package com.crypot.exchange;
+package com.crypot.exchange.bitbay;
 
-import com.crypot.exchange.trading.Ticker;
+import com.crypot.exchange.Trade;
+import com.crypot.exchange.trading.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.codec.LoggingCodecSupport;
+import org.springframework.web.reactive.function.client.ExchangeFilterFunction;
 import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
@@ -14,45 +16,65 @@ import javax.crypto.spec.SecretKeySpec;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
-import java.util.function.Consumer;
 
-public class BitbayApiAdapter {
+public class BitbayApiAdapter implements TradingApi {
 
     private String publicKey = "0c8b4e50-0b47-4954-aa6b-7500b8c17dd7";
     private String secretKey = "6b3f11ad-46c3-4e39-99a8-77de588c2693";
+    private String body;
     private WebClient client;
+
     public BitbayApiAdapter(){
+        this.publicKey = publicKey;
+        this.secretKey = secretKey;
+
+        this.client = WebClient.builder().filter(logRequest())
+                .exchangeStrategies(this.enableLoggingDetails())
+                .build();
+    }
+
+    private ExchangeFilterFunction logRequest() {
+        return ExchangeFilterFunction.ofRequestProcessor(clientRequest -> {
+            clientRequest.attributes().keySet().stream().forEach(System.out::println); //body is MyRequest.class
+            System.out.println(clientRequest.attribute("org.springframework.web.reactive.function.client.ClientRequest.LOG_ID"));
+            return Mono.just(clientRequest);
+        });
+    }
+
+    private ExchangeStrategies enableLoggingDetails(){
         ExchangeStrategies exchangeStrategies = ExchangeStrategies.withDefaults();
         exchangeStrategies
                 .messageWriters().stream()
                 .filter(LoggingCodecSupport.class::isInstance)
                 .forEach(writer -> ((LoggingCodecSupport)writer).setEnableLoggingRequestDetails(true));
-
-        this.client = WebClient.builder()
-                .exchangeStrategies(exchangeStrategies).build();
+        return exchangeStrategies;
     }
 
-    public ResponseEntity<List<Trade>> getStringTest() {
+    public String getStringTest() {
+          BitbayWebClient b = new BitbayWebClient(secretKey, publicKey);
+          String res = b.sendPostRequest("trading/history/transactions", "");
 
-        Long timeStamp = Instant.now().getEpochSecond();
-        String apiHash = generate(publicKey + timeStamp, secretKey);
+//        Long timeStamp = Instant.now().getEpochSecond();
+//        String apiHash = generate(publicKey + timeStamp, secretKey);
+//
+//        String tickers = WebClient.create()
+//                .get()
+//                .uri("https://api.bitbay.net/rest/trading/history/transactions")
+//                .header("API-Key", publicKey)
+//                .header("API-Hash", apiHash)
+//                .header("operation-id", UUID.randomUUID().toString())
+//                .header("Request-Timestamp", timeStamp.toString())
+//                .header("Content-Type", "application/json")
+//                .retrieve()
+//                .bodyToMono(String.class)
+//                .block();
+//                .retrieve()
+//                .bodyToFlux(Trade.class)
+//                .collectList()
+//                .block();
 
-        List<Trade> tickers = WebClient.create()
-                .get()
-                .uri("https://api.bitbay.net/rest/trading/history/transactions")
-                .header("API-Key", publicKey)
-                .header("API-Hash", apiHash)
-                .header("operation-id", UUID.randomUUID().toString())
-                .header("Request-Timestamp", timeStamp.toString())
-                .header("Content-Type", "application/json")
-                .retrieve()
-                .bodyToFlux(Trade.class)
-                .collectList()
-                .block();
-
-        return new ResponseEntity<>(tickers, HttpStatus.OK);
+        return res;
     }
 
     public ResponseEntity<WalletResponse> getAllWallets(){
@@ -85,7 +107,6 @@ public class BitbayApiAdapter {
 
         Long timeStamp = Instant.now().getEpochSecond();
         String apiHash = generate(publicKey + timeStamp + strBody, secretKey);
-
         String resp = this.client
                 .post()
                 .uri("https://api.bitbay.net/rest/trading/config/BTC-PLN" )
@@ -132,6 +153,31 @@ public class BitbayApiAdapter {
         }
 
         return sb.toString();
+
+    }
+
+    @Override
+    public OfferResponse newOffer(Offer offer) {
+        return null;
+    }
+
+    @Override
+    public MarketStats get24HMarketStatistics(String marketCode) {
+        return null;
+    }
+
+    @Override
+    public Ticker getLastPriceTicker(String marketCode) {
+        return null;
+    }
+
+    @Override
+    public Orderbook getOrders(int limit) {
+        return null;
+    }
+
+    @Override
+    public void changeUsedWallets(String firstUUID, String secondUUID) {
 
     }
 
