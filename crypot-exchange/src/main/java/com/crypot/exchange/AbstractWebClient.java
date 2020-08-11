@@ -4,7 +4,7 @@ abstract public class AbstractWebClient {
     private String secretKey;
     private String publicKey;
 
-    public AbstractWebClient(String secretKey, String publicKey){
+    public AbstractWebClient(String secretKey, String publicKey) {
         this.secretKey = secretKey;
         this.publicKey = publicKey;
     }
@@ -18,4 +18,6 @@ abstract public class AbstractWebClient {
 
     public abstract String sendPostRequest(String url, String body);
     public abstract String sendGetRequest(String url);
+    public abstract String sendAuthPostRequest(String url, String body);
+    public abstract String sendAuthGetRequest(String url);
 }

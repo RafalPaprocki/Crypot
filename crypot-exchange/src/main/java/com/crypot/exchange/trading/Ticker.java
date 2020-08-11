@@ -6,6 +6,7 @@ public class Ticker {
     private BigDecimal highestBid;
     private BigDecimal lowestAsk;
     private BigDecimal lastTransactionRate;
+    private String market;
 
     public Ticker(BigDecimal highestBid, BigDecimal lowestAsk, BigDecimal lastTransactionRate) {
         this.highestBid = highestBid;
@@ -35,5 +36,13 @@ public class Ticker {
 
     public void setLastTransactionRate(BigDecimal lastTransactionRate) {
         this.lastTransactionRate = lastTransactionRate;
+    }
+
+    public String getMarket() {
+        return market;
+    }
+
+    public void setMarket(String market) {
+        this.market = market;
     }
 }
