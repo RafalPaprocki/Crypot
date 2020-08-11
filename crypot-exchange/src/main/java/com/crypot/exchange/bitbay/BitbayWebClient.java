@@ -60,11 +60,12 @@ public class BitbayWebClient extends AbstractWebClient {
         return resp;
     }
 
-    public String sendAuthGetRequest(String url, String body) {
+    @Override
+    public String sendAuthGetRequest(String url) {
         String resp = this.client
                 .get()
                 .uri(baseUrl + url)
-                .headers(authHeaders(body))
+                .headers(authHeaders(""))
                 .retrieve()
                 .bodyToMono(String.class)
                 .block();
